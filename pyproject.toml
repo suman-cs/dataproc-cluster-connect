@@ -1,0 +1,99 @@
+[build-system]
+requires = [
+    "hatchling>=1.3.1",
+    "jupyterlab~=3.1",
+]
+build-backend = "hatchling.build"
+
+[project]
+name = "dataproc-cluster-connect"
+description = "A JupyterLab extension."
+readme = "README.md"
+requires-python = ">=3.7"
+authors = [
+    { name = "Suman Kumar Thakur", email = "suman.thakur@cloudsufi.com" },
+]
+keywords = [
+    "Jupyter",
+    "JupyterLab",
+    "JupyterLab3",
+]
+classifiers = [
+    "Framework :: Jupyter",
+    "Framework :: Jupyter :: JupyterLab",
+    "Framework :: Jupyter :: JupyterLab :: 3",
+    "Framework :: Jupyter :: JupyterLab :: Extensions",
+    "Framework :: Jupyter :: JupyterLab :: Extensions :: Prebuilt",
+    "License :: OSI Approved :: BSD License",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+]
+version = "0.1.0"
+
+[project.license]
+file = "LICENSE"
+
+[project.urls]
+Homepage = "https://github.com/suman-cs/dataproc-cluster-connect.git"
+
+[tool.hatch.build]
+artifacts = [
+    "dataproc-cluster-connect/labextension",
+]
+
+[tool.hatch.build.targets.wheel.shared-data]
+"dataproc-cluster-connect/labextension/static" = "share/jupyter/labextensions/dataproc-cluster-connect/static"
+"install.json" = "share/jupyter/labextensions/dataproc-cluster-connect/install.json"
+"dataproc-cluster-connect/labextension/package.json" = "share/jupyter/labextensions/dataproc-cluster-connect/package.json"
+
+[tool.hatch.build.targets.sdist]
+exclude = [
+    ".github",
+]
+
+[tool.hatch.build.hooks.jupyter-builder]
+dependencies = [
+    "hatch-jupyter-builder>=0.5.0",
+]
+build-function = "hatch_jupyter_builder.npm_builder"
+ensured-targets = [
+    "dataproc-cluster-connect/labextension/static/style.js",
+    "dataproc-cluster-connect/labextension/package.json",
+]
+skip-if-exists = [
+    "dataproc-cluster-connect/labextension/static/style.js",
+]
+
+[tool.hatch.build.hooks.jupyter-builder.editable-build-kwargs]
+build_dir = "dataproc-cluster-connect/labextension"
+source_dir = "lib"
+build_cmd = "build"
+
+[tool.hatch.build.hooks.jupyter-builder.build-kwargs]
+build_cmd = "build:prod"
+
+[tool.tbump]
+field = [
+    { name = "channel", default = "" },
+    { name = "release", default = "" },
+]
+file = [
+    { src = "pyproject.toml" },
+    { src = "dataproc-cluster-connect/_version.py" },
+    { src = "package.json" },
+]
+
+[tool.tbump.version]
+current = "0.1.0"
+regex = "(?P<major>\\d+)\\.(?P<minor>\\d+)\\.(?P<patch>\\d+)((?P<channel>a|b|rc|.dev)(?P<release>\\d+))?"
+
+[tool.tbump.git]
+message_template = "Bump to {new_version}"
+tag_template = "v{new_version}"
+
+[license]
+file = "LICENSE"
